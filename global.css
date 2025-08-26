@@ -1,0 +1,138 @@
+:root {
+  --primary-color: #3498db;
+  --primary-hover: #2980b9;
+  --secondary-color: #2c3e50;
+  --secondary-dark: #1a2530;
+  --text-color: #333;
+  --light-bg: #f5f7fa;
+  --muted-text: #7f8c8d;
+  --success-color: #27ae60;
+  --white: #ffffff;
+  --overlay: rgba(0, 0, 0, 0.5);
+  --shadow: rgba(0, 0, 0, 0.1);
+  --text-dark: #2c3e50;
+  --sidebar-bg: linear-gradient(135deg, #2c3e50, #1a2530);
+  --border-color: #ddd;
+  --error-color: #e74c3c;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--light-bg);
+  color: var(--text-color);
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Sidebar Styles*/
+#sidebar {
+  width: 280px;
+  background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+  color: var(--white);
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 20px 0;
+  z-index: 1000;
+  box-shadow: 2px 0 10px var(--shadow);
+  transition: transform 0.3s ease;
+}
+
+.user-profile{
+  padding: 25px 20px;
+  background-color: var(--secondary-color);
+}
+
+.user-info{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.user-image{
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--primary-color);
+  margin-bottom: 15px;
+}
+
+.user-image img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-details{
+  width: 100%;
+}
+
+.user-name{
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--white);
+  margin: 0 0 5px 0;
+}
+
+.user-id{
+  font-size: 0.85em;
+  color: var(--muted-text);
+  margin: 0;
+  font-weight: 400;
+}
+
+#sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+#sidebar ul li {
+  margin-bottom: 5px;
+}
+
+#sidebar ul li a {
+  display: flex;
+  align-items: center;
+  padding: 15px 25px;
+  color: #e3e3e3;
+  text-decoration: none;
+  transition: all 0.3s;
+  border-left: 4px solid transparent;
+}
+
+#sidebar ul li a:hover,
+#sidebar ul li a.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-left-color: var(--primary-color);
+  color: var(--primary-color);
+  svg {
+        fill: var(--primary-color);
+    }
+}
+#sidebar ul li #svg-logout:hover{
+   background-color: rgba(255, 255, 255, 0.1);
+  border-left-color: var(--error-color);
+  color: var(--error-color);
+  svg {
+        fill: var(--error-color);
+    }
+}
+#sidebar ul li a svg,
+#sidebar ul li a i {
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+#sidebar ul li a span {
+  font-size: 16px;
+}
