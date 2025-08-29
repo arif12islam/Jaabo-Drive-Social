@@ -121,9 +121,15 @@ main {
   margin-bottom: 15px;
 }
 
+.ride-btn {
+  display: flex;
+  justify-content: space-between;
+    gap: 10px;
+}
+
 .ride-action {
   display: block;
-  width: 100%;
+  width: 50%;
   padding: 12px;
   background: var(--primary-color);
   color: var(--white);

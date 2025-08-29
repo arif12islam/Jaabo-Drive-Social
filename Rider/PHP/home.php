@@ -11,6 +11,75 @@
     <script src="../JS/home.js" defer></script>
 </head>
 <body>
+    <?php
+
+        $rides = [
+            [ 
+                "id" => 1, 
+                "name" => "Lionel Messi",
+                "title" => "Gulshan to Airport", 
+                "from" => "Gulshan", 
+                "to" => "Shahjalal Int. Airport", 
+                "price" => "৳1500", 
+                "time" => "2:30 PM"
+            ],
+            [ 
+                "id" => 2, 
+                "name" => "Cristiano Ronaldo",
+                "title" => "Banani to Hatirjheel Trip", 
+                "from" => "Banani", 
+                "to" => "Hatirjheel", 
+                "price" => "৳550", 
+                "time" => "10:00 AM"
+            ],
+            [ 
+                "id" => 3, 
+                "name" => "Neymar Jr.",
+                "title" => "Dhanmondi to Uttara Route", 
+                "from" => "Dhanmondi", 
+                "to" => "Uttara", 
+                "price" => "৳700", 
+                "time" => "12:00 PM"
+            ],
+            [ 
+                "id" => 4, 
+                "name" => "Kylian Mbappé",
+                "title" => "University Shuttle", 
+                "from" => "Farmgate", 
+                "to" => "BUET Campus", 
+                "price" => "৳300", 
+                "time" => "2:30 PM"
+            ],
+            [ 
+                "id" => 5, 
+                "name" => "Luka Modrić",
+                "title" => "Shopping Run", 
+                "from" => "Mirpur", 
+                "to" => "Bashundhara City Mall", 
+                "price" => "৳450", 
+                "time" => "2:00 PM"
+            ],
+            [ 
+                "id" => 6, 
+                "name" => "Zlatan Ibrahimović",
+                "title" => "Nightlife Tour", 
+                "from" => "Gulshan", 
+                "to" => "Banani Entertainment Zone", 
+                "price" => "৳600", 
+                "time" => "6:00 PM"
+            ]
+        ];
+
+        $searchTerm = isset($_GET['q']) ? strtolower(trim($_GET['q'])) : "";
+
+        $filteredRides = array_filter($rides, function ($ride) use ($searchTerm) {
+            return $searchTerm === "" ||
+                str_contains(strtolower($ride["title"]), $searchTerm) ||
+                str_contains(strtolower($ride["from"]), $searchTerm) ||
+                str_contains(strtolower($ride["to"]), $searchTerm);
+        });
+    ?>
+
     <div class="home-container">
         <nav id="sidebar">
             <div class="user-profile">
@@ -21,11 +90,9 @@
                     <div class="user-details">
                         <h2 class="user-name">Lionel Messi</h2>
                         <p class="user-id">ID-LM10</p>
-
                     </div>
                 </div>
             </div>
-            
             <ul>
                 <li>
                     <a href="home.php" class="active">
@@ -55,16 +122,44 @@
         </nav>  
     </div>
     <main>
-        <div class="search-bar">
+        <form method="GET" class="search-bar">
             <div class="search-bg"></div>
-            <input type="text" id="search-input" placeholder="Search for rides...">
-            <button id="search-btn"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg></button>
-        </div>
-        
+            <input type="text" id="search-input" name="q" placeholder="Search for rides..." 
+                   value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
+            <button id="search-btn" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                    <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+                </svg>
+            </button>
+        </form>
+                        
         <div class="containers-wrapper" id="ridesContainer">
-            <!-- Ride cards will be generated here -->
+            <?php foreach ($filteredRides as $ride): ?>
+            <div class="ride-card">
+                <div class="ride-image">
+                    <div class="card-image">
+                        <img src="../../Asset/icons/person.png" alt="User Image">
+                    </div>
+                    <h3 class="rider-name"><?= htmlspecialchars($ride['name']) ?></h3>
+                </div>
+            
+                <div class="ride-details">
+                    <h3 class="ride-title"><?= htmlspecialchars($ride['title']) ?></h3>
+                    <div class="ride-info">
+                        <span><?= htmlspecialchars($ride['from']) ?> → <?= htmlspecialchars($ride['to']) ?></span>
+                        <span><?= htmlspecialchars($ride['time']) ?></span>
+                    </div>
+                    <div class="ride-price"><?= htmlspecialchars($ride['price']) ?></div>
+                    <div class="ride-btn">
+                        <button class="ride-action">Book Now</button>
+                        <button class="ride-action">Call</button>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
         </div>
-        
+
+
     </main>
 </body>
 </html>
