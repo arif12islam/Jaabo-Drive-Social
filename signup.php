@@ -1,9 +1,40 @@
+<?php
+include "database.php";
+if($_SERVER["REQUEST_METHOD"]=="POST"){
+    $userId = $_POST["userId"];
+    $password = $_POST["password"];
+    $fullName = $_POST["fullName"];
+    $email = $_POST["email"];
+    $userType=$_POST["userType"];
+    $phone=$_POST["phone"];
+    $hash_pass= password_hash($password, PASSWORD_DEFAULT) ;
+
+    if(empty($userId)||empty($password)||empty($fullName)||empty($email)||empty($userType)||empty($phone)){
+        $error="fill all the form";
+    }
+    else
+    {
+        $sql="INSERT INTO users (user_id,full_name,email,phone,password,userType) 
+        VALUES ('$userId', '$fullName', '$email', '$phone', '$hash_pass', '$userType')";
+
+        if($conn ->query($sql)==TRUE){
+            header("Location: login.php");
+            exit();
+        }
+        else{
+            echo"404 error";
+        }
+    }
+
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RideShare - Sign Up</title>
+    <title>Jaabo – Drive Social</title>
     <link rel="icon" type="image/png" href="./Asset/icons/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="global.css">
@@ -18,7 +49,7 @@
             <p>Join thousands of users who trust Jaabo</p>
         </div>
         
-        <form class="signup-form" id="signupForm">
+        <form class="signup-form" id="signupForm" method="POST">
             <div class="form-grid">
                 <div class="form-group">
                     <label for="fullName">Full Name</label>
@@ -26,7 +57,6 @@
                         <i class="fas fa-user"></i>
                         <input type="text" name="fullName" id="fullName" placeholder="Full name">
                     </div>
-                    <div class="error-message" id="fullNameError">Please enter your full name</div>
                 </div>
                 
                 <div class="form-group">
@@ -35,7 +65,6 @@
                         <i class="fas fa-user"></i>
                         <input type="text" name="userId" id="id" placeholder="Enter your ID">
                     </div>
-                    <div class="error-message" id="idError">Please enter a valid ID</div>
                 </div>
                 
                 <div class="form-group full-width">
@@ -44,7 +73,6 @@
                         <i class="fas fa-envelope"></i>
                         <input type="email" name="email" id="email" placeholder="Enter your email">
                     </div>
-                    <div class="error-message" id="emailError">Please enter a valid email address</div>
                 </div>
                 
                 
@@ -63,7 +91,6 @@
                         <i class="fas fa-lock"></i>
                         <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm password">
                     </div>
-                    <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
                 </div>
                 
                 <div class="form-group">
@@ -76,7 +103,6 @@
                             <option value="driver">Driver</option>
                         </select>
                     </div>
-                    <div class="error-message" id="userTypeError">Please select your role</div>
                 </div>
                 
                 <div class="form-group">
@@ -85,18 +111,16 @@
                         <i class="fas fa-phone"></i>
                         <input type="tel" name="phone" id="phone" placeholder="Your phone number">
                     </div>
-                    <div class="error-message" id="phoneError">Please enter a valid phone number</div>
                 </div>
-
-                <div class="error-message" id="termsError">You must agree to the terms and conditions</div>
                 
-                <button type="submit" class="signup-btn" id="signup-btn">Create Account</button>
             </div>
+            <div class="input-error" id="loginError"><?php if(isset($error)) echo $error; ?></div>
+            <button type="submit" class="signup-btn" id="signup-btn">Create Account</button>
         </form>
         
         
         <div class="login-link">
-            Already have an account? <a href="login.html">Log in</a>
+            Already have an account? <a href="login.php">Log in</a>
         </div>
     </div>
 </body>

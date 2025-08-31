@@ -1,3 +1,11 @@
+<?php
+    session_start();
+    if(!isset($_SESSION['userID'])){
+        header("Location: ../../login.php");
+        exit();
+    }
+ ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,8 +25,8 @@
                         <img src="../../Asset/icons/person.png" alt="User Image" class="user-image">
                     </div>
                     <div class="user-details">
-                        <h2 class="user-name">Lionel Messi</h2>
-                        <p class="user-id">ID-LM10</p>
+                        <h2 class="user-name"><?php echo htmlspecialchars($_SESSION['fullName']); ?></h2>
+                        <p class="user-id"><?php echo htmlspecialchars($_SESSION['userID']); ?></p>
                     </div>
                 </div>
             </div>
@@ -43,7 +51,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="../../login.html" id="svg-logout" style="cursor: pointer;">
+                    <a href="../../logout.php" id="svg-logout" style="cursor: pointer;">
                         <svg transform="scale(-1, 1)" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/></svg>
                         <span>Log out</span>
                     </a>

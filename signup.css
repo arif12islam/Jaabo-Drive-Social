@@ -114,3 +114,10 @@ body {
     margin-top: 5px;
     display: none;
 }
+.input-error {
+    color: var(--error-color);
+    font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+}
