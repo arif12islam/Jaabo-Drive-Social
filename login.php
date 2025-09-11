@@ -22,7 +22,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $_SESSION["userID"] = $user["user_id"];
                 $_SESSION["fullName"] = $user["full_name"];
                 $_SESSION["userType"] = $user["userType"];
-                header("Location: Rider/PHP/home.php");
+                
+                if($_SESSION["userType"]=="rider"){
+                    header("Location: Rider/PHP/home.php");
+                }
+                else{
+                    header("Location: Driver/PHP/home.php");
+                }
 
                 if($remember){
                     setcookie("userId", $userId, time() + (86400*30), "/");

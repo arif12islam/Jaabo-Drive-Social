@@ -1,10 +1,92 @@
 <?php
-    session_start();
-    if(!isset($_SESSION['userID'])){
-        header("Location: ../../login.php");
-        exit();
+session_start();
+if(!isset($_SESSION['userID'])){
+    header("Location: ../../login.php");
+    exit();
+}
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+require_once "../../database.php"; 
+$userID = $_SESSION['userID'];
+
+//Handle Booking
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_ride'])) {
+    $ride_id = intval($_POST['ride_id']);
+    $seats = 1; // default: 1 seat booked
+
+    // Check if ride is still available
+    $check = $conn->prepare("SELECT status FROM rides WHERE ride_id = ?");
+    $check->bind_param("i", $ride_id);
+    $check->execute();
+    $check_result = $check->get_result();
+    
+    if ($check_result->num_rows > 0) {
+        $ride = $check_result->fetch_assoc();
+        
+        if ($ride['status'] === 'active') {
+            // Insert booking
+            $stmt = $conn->prepare("INSERT INTO bookings (ride_id, user_id, seats_booked, status, booked_at) 
+                                    VALUES (?, ?, ?, 'booked', NOW())");
+            $stmt->bind_param("isi", $ride_id, $userID, $seats);
+            
+            if ($stmt->execute()) {
+                // Update ride status
+                $update = $conn->prepare("UPDATE rides SET status = 'booked' WHERE ride_id = ?");
+                $update->bind_param("i", $ride_id);
+                $update->execute();
+                
+                $_SESSION['success'] = "Ride booked successfully!";
+            } else {
+                $_SESSION['error'] = "Failed to book ride. Please try again.";
+            }
+        } else {
+            $_SESSION['error'] = "This ride is no longer available.";
+        }
+    } else {
+        $_SESSION['error'] = "Ride not found.";
     }
- ?>
+    
+    // Refresh page
+    header("Location: home.php");
+    exit();
+}
+
+// ---- Fetch Rides ----
+$searchTerm = isset($_GET['q']) ? strtolower(trim($_GET['q'])) : "";
+
+$sql = "SELECT r.ride_id, r.title, r.origin, r.destination, r.departure_time, r.price, u.full_name 
+        FROM rides r
+        JOIN users u ON r.user_id = u.user_id
+        WHERE r.status = 'active'";
+
+if ($searchTerm !== "") {
+    $like = "%" . $conn->real_escape_string($searchTerm) . "%";
+    $sql .= " AND (LOWER(r.title) LIKE '$like' OR LOWER(r.origin) LIKE '$like' OR LOWER(r.destination) LIKE '$like')";
+}
+
+$sql .= " ORDER BY r.departure_time ASC";
+
+$result = $conn->query($sql);
+
+if (!$result) {
+    die("SQL Error: " . $conn->error);
+}
+
+$rides = [];
+while ($row = $result->fetch_assoc()) {
+    $rides[] = [
+        "id"    => $row['ride_id'],
+        "name"  => $row['full_name'],
+        "title" => $row['title'],
+        "from"  => $row['origin'],
+        "to"    => $row['destination'],
+        "price" => "৳" . number_format($row['price'], 0),
+        "time"  => date("g:i A", strtotime($row['departure_time']))
+    ];
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,75 +100,6 @@
     <script src="../JS/home.js" defer></script>
 </head>
 <body>
-    <?php
-
-        $rides = [
-            [ 
-                "id" => 1, 
-                "name" => "Lionel Messi",
-                "title" => "Gulshan to Airport", 
-                "from" => "Gulshan", 
-                "to" => "Shahjalal Int. Airport", 
-                "price" => "৳1500", 
-                "time" => "2:30 PM"
-            ],
-            [ 
-                "id" => 2, 
-                "name" => "Cristiano Ronaldo",
-                "title" => "Banani to Hatirjheel Trip", 
-                "from" => "Banani", 
-                "to" => "Hatirjheel", 
-                "price" => "৳550", 
-                "time" => "10:00 AM"
-            ],
-            [ 
-                "id" => 3, 
-                "name" => "Neymar Jr.",
-                "title" => "Dhanmondi to Uttara Route", 
-                "from" => "Dhanmondi", 
-                "to" => "Uttara", 
-                "price" => "৳700", 
-                "time" => "12:00 PM"
-            ],
-            [ 
-                "id" => 4, 
-                "name" => "Kylian Mbappé",
-                "title" => "University Shuttle", 
-                "from" => "Farmgate", 
-                "to" => "BUET Campus", 
-                "price" => "৳300", 
-                "time" => "2:30 PM"
-            ],
-            [ 
-                "id" => 5, 
-                "name" => "Luka Modrić",
-                "title" => "Shopping Run", 
-                "from" => "Mirpur", 
-                "to" => "Bashundhara City Mall", 
-                "price" => "৳450", 
-                "time" => "2:00 PM"
-            ],
-            [ 
-                "id" => 6, 
-                "name" => "Zlatan Ibrahimović",
-                "title" => "Nightlife Tour", 
-                "from" => "Gulshan", 
-                "to" => "Banani Entertainment Zone", 
-                "price" => "৳600", 
-                "time" => "6:00 PM"
-            ]
-        ];
-
-        $searchTerm = isset($_GET['q']) ? strtolower(trim($_GET['q'])) : "";
-
-        $filteredRides = array_filter($rides, function ($ride) use ($searchTerm) {
-            return $searchTerm === "" ||
-                str_contains(strtolower($ride["title"]), $searchTerm) ||
-                str_contains(strtolower($ride["from"]), $searchTerm) ||
-                str_contains(strtolower($ride["to"]), $searchTerm);
-        });
-    ?>
-
     <div class="home-container">
         <nav id="sidebar">
             <div class="user-profile">
@@ -141,29 +154,33 @@
         </form>
                         
         <div class="containers-wrapper" id="ridesContainer">
-            <?php foreach ($filteredRides as $ride): ?>
-            <div class="ride-card">
-                <div class="ride-image">
-                    <div class="card-image">
-                        <img src="../../Asset/icons/person.png" alt="User Image">
+            <?php if (count($rides) > 0): ?>
+                <?php foreach ($rides as $ride): ?>
+                <div class="ride-card">
+                    <div class="ride-image">
+                        <div class="card-image">
+                            <img src="../../Asset/icons/person.png" alt="User Image">
+                        </div>
+                        <h3 class="rider-name"><?= htmlspecialchars($ride['name']) ?></h3>
                     </div>
-                    <h3 class="rider-name"><?= htmlspecialchars($ride['name']) ?></h3>
-                </div>
             
-                <div class="ride-details">
-                    <h3 class="ride-title"><?= htmlspecialchars($ride['title']) ?></h3>
-                    <div class="ride-info">
-                        <span><?= htmlspecialchars($ride['from']) ?> → <?= htmlspecialchars($ride['to']) ?></span>
-                        <span><?= htmlspecialchars($ride['time']) ?></span>
-                    </div>
-                    <div class="ride-price"><?= htmlspecialchars($ride['price']) ?></div>
-                    <div class="ride-btn">
-                        <button class="ride-action">Book Now</button>
-                        <button class="ride-action">Call</button>
+                    <div class="ride-details">
+                        <h3 class="ride-title"><?= htmlspecialchars($ride['title']) ?></h3>
+                        <div class="ride-info">
+                            <span><?= htmlspecialchars($ride['from']) ?> → <?= htmlspecialchars($ride['to']) ?></span>
+                            <span><?= htmlspecialchars($ride['time']) ?></span>
+                        </div>
+                        <div class="ride-price"><?= htmlspecialchars($ride['price']) ?></div>
+                        <div class="ride-btn">
+                            <button class="ride-action" onclick="bookRide(<?= $ride['id'] ?>)">Book Now</button>
+                            <button class="ride-action">Call</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No rides found.</p>
+            <?php endif; ?>
         </div>
 
 

@@ -18,39 +18,13 @@ main {
     font-weight: 600;
 }
 
-.rider-badge {
-    background: var(--success-color);
+.driver-badge {
+    background: var(--primary-color);
     color: white;
     padding: 5px 10px;
     border-radius: 20px;
     font-size: 0.8em;
     margin-left: 15px;
-}
-
-.status-filter {
-    display: flex;
-    gap: 10px;
-    background: var(--white);
-    padding: 8px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px var(--shadow);
-}
-
-.status-btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
-    background: transparent;
-    color: var(--muted-text);
-    cursor: pointer;
-    transition: all 0.3s;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.status-btn.active, .status-btn:hover {
-    background: var(--primary-color);
-    color: var(--white);
 }
 
 /* Alert messages */
@@ -85,38 +59,10 @@ main {
 }
 
 
-/* Status badges for my rides */
-.ride-status {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 0.8em;
-    font-weight: 500;
-}
 
-.status-confirmed {
-    background-color: rgba(52, 152, 219, 0.9);
-    color: white;
-}
 
-.status-completed {
-    background-color: rgba(39, 174, 96, 0.9);
-    color: white;
-}
 
-.status-upcoming {
-    background-color: rgba(243, 156, 18, 0.9);
-    color: white;
-}
-
-.status-cancelled {
-    background-color: rgba(231, 76, 60, 0.9);
-    color: white;
-}
-
-/* Action buttons specific to booked rides */
+/* Action buttons specific to driver's rides */
 .btn-call {
     background: var(--success-color);
 }
@@ -125,29 +71,20 @@ main {
     background: #219653;
 }
 
-.btn-cancel {
+.btn-delete {
     background: var(--error-color);
 }
 
-.btn-cancel:hover {
+.btn-delete:hover {
     background: #c0392b;
 }
 
-.btn-rate {
-    background: var(--warning-color);
+.btn-view-bookings {
+    background: var(--primary-color);
 }
 
-.btn-rate:hover {
-    background: #e67e22;
-}
-
-.btn-inactive {
-    background: var(--muted-text);
-    cursor: not-allowed;
-}
-
-.btn-inactive:hover {
-    background: var(--muted-text);
+.btn-view-bookings:hover {
+    background: var(--primary-hover);
 }
 
 .no-rides {
@@ -168,7 +105,7 @@ main {
     margin-bottom: 20px;
 }
 
-/* Cancel confirmation modal */
+/* Delete confirmation modal */
 .modal {
     display: none;
     position: fixed;
@@ -210,16 +147,7 @@ main {
     color: white;
 }
 
-.modal-confirm:hover {
-    background-color: #c0392b;
-}
-
 .modal-cancel {
     background-color: var(--muted-text);
     color: white;
 }
-
-.modal-cancel:hover {
-    background-color: #636e72;
-}
-
