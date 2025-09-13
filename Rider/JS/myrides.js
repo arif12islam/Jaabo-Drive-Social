@@ -15,11 +15,7 @@ function showCancelModal(bookingId, rideId) {
     document.getElementById('ride_id').value = rideId;
     document.getElementById('cancelModal').style.display = 'flex';
 }
-function showPaymentModal(bookingId, rideId) {
-    document.getElementById('booking_id').value = bookingId;
-    document.getElementById('ride_id').value = rideId;
-    document.getElementById('payModal').style.display = 'flex';
-}
+
 function showDeleteModal(bookingId) {
     // Set the value of the hidden input in the corrected modal form
     document.getElementById('delete_booking_id').value = bookingId;
