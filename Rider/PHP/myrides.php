@@ -73,6 +73,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_booking'])) {
     header("Location: myrides.php");
     exit();
 }
+// Handle booking deletion from the rider's view
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_booking'])) {
+    $booking_id = intval($_POST['booking_id']);
+    
+    // Prepare a statement to delete the booking, ensuring it belongs to the current user
+    // This is a secure way to prevent users from deleting others' bookings
+    $stmt = $conn->prepare("DELETE FROM bookings WHERE booking_id = ? AND user_id = ?");
+    $stmt->bind_param("ii", $booking_id, $userID);
+    
+    if ($stmt->execute()) {
+        // Check if a row was actually deleted
+        if ($stmt->affected_rows > 0) {
+            $_SESSION['success'] = "Booking record removed from your list successfully!";
+        } else {
+            // This case handles if the booking doesn't exist or doesn't belong to the user
+            $_SESSION['error'] = "Could not remove booking. It may have already been removed or you do not have permission.";
+        }
+    } else {
+        $_SESSION['error'] = "Failed to remove the booking record. Please try again.";
+    }
+    
+    $stmt->close();
+    
+    header("Location: myrides.php");
+    exit();
+}
 ?>
 ?>
 <!DOCTYPE html>
@@ -216,7 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_booking'])) {
                     <input type="hidden" name="booking_id" id="booking_id">
                     <input type="hidden" name="ride_id" id="ride_id">
                     <div class="modal-buttons">
-                        <button type="button" class="modal-btn modal-cancel" onclick="closeModal()">No, Go Back</button>
+                        <button type="button" class="modal-btn modal-cancel" onclick="closeModal()">Cancel</button>
                         <button type="submit" class="modal-btn modal-confirm">Yes, Pay Now</button>
                     </div>
                 </form>
@@ -224,14 +250,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_booking'])) {
         </div>
         <div class="modal" id="deleteModal">
             <div class="modal-content">
-                <h3>Delete Ride</h3>
-                <p>Are you sure you want to delete this ride? This action cannot be undone.</p>
+                <h3>Delete Booking</h3>
+                <p>Are you sure you want to delete this booking from your list? This action cannot be undone.</p>
                 <form method="POST" id="deleteForm">
-                    <input type="hidden" name="delete_ride" value="1">
-                    <input type="hidden" name="ride_id" id="ride_id">
+                    <input type="hidden" name="delete_booking" value="1">
+                    <input type="hidden" name="booking_id" id="delete_booking_id">
                     <div class="modal-buttons">
                         <button type="button" class="modal-btn modal-cancel" onclick="closeModal()">Cancel</button>
-                        <button type="submit" class="modal-btn modal-delete">Delete</button>
+                        <button type="submit" class="modal-btn modal-delete">Yes, Delete</button>
                     </div>
                 </form>
             </div>

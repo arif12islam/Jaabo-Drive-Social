@@ -13,8 +13,23 @@ $userID = $_SESSION['userID'];
 
 //Handle Booking
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_ride'])) {
+
+    // ---- UPDATED: Check for any active or pending rides ----
+    $check_active_ride_stmt = $conn->prepare("SELECT booking_id FROM bookings WHERE user_id = ? AND status IN ('booked', 'completed') LIMIT 1");
+    $check_active_ride_stmt->bind_param("i", $userID);
+    $check_active_ride_stmt->execute();
+    $active_ride_result = $check_active_ride_stmt->get_result();
+
+    if ($active_ride_result->num_rows > 0) {
+        // User has an active ride, block the new booking
+        $_SESSION['error'] = "You already have an active ride. Please complete your current journey before booking a new one.";
+        header("Location: myrides.php"); // Redirect to where they can see their ride
+        exit();
+    }
+    // ---- END UPDATED CHECK ----
+
     $ride_id = intval($_POST['ride_id']);
-    $seats = 1; // default: 1 seat booked
+    $seats = 1;
 
     // Check if ride is still available
     $check = $conn->prepare("SELECT status FROM rides WHERE ride_id = ?");
@@ -88,6 +103,19 @@ while ($row = $result->fetch_assoc()) {
         "seats" => "Seats: " . number_format($row['seats_available'])
     ];
 }
+// ---- NEW: Check for pending payment to disable booking buttons ----
+$hasActiveRide = false;
+$check_active_ride_stmt = $conn->prepare("SELECT booking_id FROM bookings WHERE user_id = ? AND status IN ('booked', 'completed') LIMIT 1");
+$check_active_ride_stmt->bind_param("i", $userID);
+if ($check_active_ride_stmt->execute()) {
+    $active_ride_result = $check_active_ride_stmt->get_result();
+    if ($active_ride_result->num_rows > 0) {
+        $hasActiveRide = true;
+    }
+}
+$check_active_ride_stmt->close();
+?>
+?>
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -135,41 +163,49 @@ while ($row = $result->fetch_assoc()) {
                 </svg>
             </button>
         </form>
-                        
-        <div class="containers-wrapper" id="ridesContainer">
-            <?php if (count($rides) > 0): ?>
-                <?php foreach ($rides as $ride): ?>
-                <div class="ride-card">
-                    <div class="ride-image">
-                        <div class="card-image">
-                            <img src="../../Asset/icons/person.png" alt="User Image">
-                        </div>
-                        <h3 class="rider-name"><?= htmlspecialchars($ride['name']) ?></h3>
-                    </div>
-            
-                    <div class="ride-details">
-                        <h3 class="ride-title"><?= htmlspecialchars($ride['title']) ?></h3>
-                        <div class="ride-info">
-                            <span><?= htmlspecialchars($ride['from']) ?> → <?= htmlspecialchars($ride['to']) ?></span>
-                            <span><?= htmlspecialchars($ride['time']) ?></span>
-                        </div>
-                        <div class="ride-price-seats">
-                            <span class="ride-price"><?= htmlspecialchars($ride['price']) ?></span>
-                            <span class="ride-seats"><?= htmlspecialchars($ride['seats']) ?></span>
-                        </div>
 
-                        <div class="ride-btn">
-                            <button class="ride-action" onclick="bookRide(<?= $ride['id'] ?>)">Book Now</button>
-                            <button class="ride-action">Call</button>
+        <?php if (!$hasActiveRide): ?>                       
+            <div class="containers-wrapper" id="ridesContainer">
+                <?php if (count($rides) > 0): ?>
+                    <?php foreach ($rides as $ride): ?>
+                    <div class="ride-card">
+                        <div class="ride-image">
+                            <div class="card-image">
+                                <img src="../../Asset/icons/person.png" alt="User Image">
+                            </div>
+                            <h3 class="rider-name"><?= htmlspecialchars($ride['name']) ?></h3>
+                        </div>
+                    
+                        <div class="ride-details">
+                            <h3 class="ride-title"><?= htmlspecialchars($ride['title']) ?></h3>
+                            <div class="ride-info">
+                                <span><?= htmlspecialchars($ride['from']) ?> → <?= htmlspecialchars($ride['to']) ?></span>
+                                <span><?= htmlspecialchars($ride['time']) ?></span>
+                            </div>
+                            <div class="ride-price-seats">
+                                <span class="ride-price"><?= htmlspecialchars($ride['price']) ?></span>
+                                <span class="ride-seats"><?= htmlspecialchars($ride['seats']) ?></span>
+                            </div>
+
+                            <div class="ride-btn">
+                                <button class="ride-action" onclick="bookRide(<?= $ride['id'] ?>)">Book Now</button>
+                                <button class="ride-action">Call</button>
+                            </div>
                         </div>
                     </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No rides found.</p>
+                <?php endif; ?>
+            </div>
+        <?php else: ?>
+            <div class="no-rides">
+                    <p>You have a pending payment for a completed ride or an active ride. Please complete your current ride or go to 'My Rides' to pay before booking a new one.</p>
+                    <a href="myrides.php" class="ride-action" style="display: inline-block; width: auto; padding: 12px 20px; margin-top:15px;">
+                        Go to My Rides
+                    </a>
                 </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>No rides found.</p>
-            <?php endif; ?>
-        </div>
-
+        <?php endif; ?>
 
     </main>
 </body>

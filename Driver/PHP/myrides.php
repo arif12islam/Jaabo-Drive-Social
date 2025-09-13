@@ -39,6 +39,60 @@
             "status" => $row['status']
         ];
     }
+
+    // Handle ending a ride
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['end_ride'])) {
+    $ride_id = intval($_POST['ride_id']);
+
+    // Use a transaction to ensure data integrity
+    $conn->begin_transaction();
+
+    try {
+        // 1. Verify the ride belongs to the current driver
+        $check_stmt = $conn->prepare("SELECT user_id FROM rides WHERE ride_id = ?");
+        $check_stmt->bind_param("i", $ride_id);
+        $check_stmt->execute();
+        $result = $check_stmt->get_result();
+        
+        if ($result->num_rows === 0) {
+            throw new Exception("Ride not found.");
+        }
+        
+        $ride = $result->fetch_assoc();
+        if ($ride['user_id'] != $userID) {
+            throw new Exception("You do not have permission to end this ride.");
+        }
+        $check_stmt->close();
+
+        // 2. Update the ride status to 'completed'
+        $update_ride_stmt = $conn->prepare("UPDATE rides SET status = 'completed' WHERE ride_id = ?");
+        $update_ride_stmt->bind_param("i", $ride_id);
+        if (!$update_ride_stmt->execute()) {
+             throw new Exception("Failed to update ride status.");
+        }
+        $update_ride_stmt->close();
+
+        // 3. Update the corresponding booking status to 'completed'
+        $update_booking_stmt = $conn->prepare("UPDATE bookings SET status = 'completed' WHERE ride_id = ?");
+        $update_booking_stmt->bind_param("i", $ride_id);
+        if (!$update_booking_stmt->execute()) {
+             throw new Exception("Failed to update booking status.");
+        }
+        $update_booking_stmt->close();
+
+        // If all queries were successful, commit the changes
+        $conn->commit();
+        $_SESSION['success'] = "Ride ended successfully! The rider can now complete the payment.";
+
+    } catch (Exception $e) {
+        // If anything failed, roll back all changes
+        $conn->rollback();
+        $_SESSION['error'] = "Error: " . $e->getMessage();
+    }
+    
+    header("Location: myrides.php");
+    exit();
+}
     
     // Handle ride deletion
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_ride'])) {
@@ -108,7 +162,7 @@
                 </div>
             </div>
             <ul>
-                <li><a href="home.php"><i class="fas fa-home"></i><span>Home</span></a></li>
+                <li><a href="postride.php"><i class="fas fa-plus-circle"></i><span>Post Ride</span></a></li>
                 <li><a href="myrides.php"  class="active"><i class="fas fa-car"></i><span>My Rides</span></a></li>
                 <li><a href="account.php"><i class="fas fa-user"></i><span>Account</span></a></li>
                 <li><a href="../../logout.php" id="svg-logout"><i class="fas fa-sign-out-alt"></i><span>Log out</span></a></li>
@@ -176,15 +230,15 @@
                     <div class="ride-btn">
                         <?php if ($ride['status'] === 'booked'): ?>
                             <a href="tel:<?= htmlspecialchars($ride['phone']) ?>" class="ride-action">Call Rider</a>
-                            <button class="ride-action" onclick="showDeleteModal(<?= $ride['id'] ?>)">End Ride</button>
+                            <button class="ride-action" id="green" onclick="showEndRideModal(<?= $ride['id'] ?>)">End Ride</button>
                         
                         <?php elseif ($ride['status'] === 'completed'): ?>
                             <button class="ride-action" onclick="viewBookings(<?= $ride['id'] ?>)">Bookings</button>
-                            <button class="ride-action" onclick="showDeleteModal(<?= $ride['id'] ?>)">Delete</button>
+                            <button class="ride-action" id="red" onclick="showDeleteModal(<?= $ride['id'] ?>)">Delete</button>
                         
                         <?php else: ?>
                             <button class="ride-action" onclick="viewDetails(<?= $ride['id'] ?>)">Details</button>
-                            <button class="ride-action" onclick="showDeleteModal(<?= $ride['id'] ?>)">Delete</button>
+                            <button class="ride-action" id-="red" onclick="showDeleteModal(<?= $ride['id'] ?>)">Delete</button>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -214,7 +268,7 @@
                     <input type="hidden" name="ride_id" id="ride_id">
                     <div class="modal-buttons">
                         <button type="button" class="modal-btn modal-cancel" onclick="closeModal()">Cancel</button>
-                        <button type="submit" class="modal-btn modal-confirm">Delete</button>
+                        <button type="submit" class="modal-btn modal-delete">Yes, Delete</button>
                     </div>
                 </form>
             </div>
@@ -223,14 +277,13 @@
         <div class="modal" id="endRideModal">
             <div class="modal-content">
                 <h3>End Ride</h3>
-                <p>Are you sure you want to end this ride? This action cannot be undone.</p>
+                <p>This will mark the ride as completed and allow the rider to pay. Are you sure?</p>
                 <form method="POST" id="endRideForm">
                     <input type="hidden" name="end_ride" value="1">
-                    <input type="hidden" name="ride_id" id="ride_id">
-                    <input type="hidden" name="ride_id" id="ride_id">
+                    <input type="hidden" name="ride_id" id="end_ride_id">
                     <div class="modal-buttons">
                         <button type="button" class="modal-btn modal-cancel" onclick="closeModal()">Cancel</button>
-                        <button type="submit" class="modal-btn modal-confirm" style="background-color: #3498db;">End Ride</button>
+                        <button type="submit" class="modal-btn modal-confirm" style="background-color: #3498db;">Yes, End</button>
                     </div>
                 </form>
             </div>

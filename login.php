@@ -27,7 +27,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     header("Location: Rider/PHP/home.php");
                 }
                 else{
-                    header("Location: Driver/PHP/home.php");
+                    header("Location: Driver/PHP/postride.php");
                 }
 
                 if($remember){

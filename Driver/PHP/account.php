@@ -115,7 +115,7 @@ if(isset($_POST['deleteAccount'])){
                 </div>
             </div>
             <ul>
-                <li><a href="home.php"><i class="fas fa-home"></i><span>Home</span></a></li>
+                <li><a href="postride.php"><i class="fas fa-plus-circle"></i><span>Post Ride</span></a></li>
                 <li><a href="myrides.php"><i class="fas fa-car"></i><span>My Rides</span></a></li>
                 <li><a href="account.php" class="active"><i class="fas fa-user"></i><span>Account</span></a></li>
                 <li><a href="../../logout.php" id="svg-logout"><i class="fas fa-sign-out-alt"></i><span>Log out</span></a></li>

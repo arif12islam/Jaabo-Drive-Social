@@ -286,6 +286,17 @@ body {
 .status-paid {
   background: var(--success-color);
 }
+/* In home.css or global.css */
+.ride-action.disabled {
+    background-color: #999; /* Greyed out */
+    cursor: not-allowed;   /* Show a 'not allowed' cursor on hover */
+    color: #f0f0f0;
+    text-decoration: none;
+}
+
+.ride-action.disabled:hover {
+    background-color: #999; /* Prevent color change on hover */
+}
 
 
 /*modal */
@@ -369,4 +380,13 @@ body {
 #red:hover{
   background-color: var(--error-hover);
   color: var(--white);
+}
+
+
+
+.no-rides {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted-text);
 }

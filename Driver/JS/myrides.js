@@ -14,14 +14,12 @@ function showDeleteModal(rideId) {
     document.getElementById('ride_id').value = rideId;
     document.getElementById('deleteModal').style.display = 'flex';
 }
-function showDeleteModal(rideId) {
-    document.getElementById('ride_id').value = rideId;
+function showEndRideModal(rideId) {
+    document.getElementById('end_ride_id').value = rideId;
     document.getElementById('endRideModal').style.display = 'flex';
 }
 
 function closeModal() {
     document.getElementById('deleteModal').style.display = 'none';
-}
-function closeModal() {
     document.getElementById('endRideModal').style.display = 'none';
 }
