@@ -8,8 +8,6 @@
     require_once "../../database.php";
     $userID = $_SESSION['userID'];
     
-    // Check if user is a driver
-    $isDriver = true; // In a real app, you would check the user's role
     
     // Fetch driver's posted rides from database
     $sql = "SELECT r.ride_id, r.title, r.origin, r.destination, r.departure_time, r.price, r.status,
@@ -44,11 +42,10 @@
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['end_ride'])) {
     $ride_id = intval($_POST['ride_id']);
 
-    // Use a transaction to ensure data integrity
     $conn->begin_transaction();
 
     try {
-        // 1. Verify the ride belongs to the current driver
+        // Verify the ride belongs to the current driver
         $check_stmt = $conn->prepare("SELECT user_id FROM rides WHERE ride_id = ?");
         $check_stmt->bind_param("i", $ride_id);
         $check_stmt->execute();
@@ -64,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['end_ride'])) {
         }
         $check_stmt->close();
 
-        // 2. Update the ride status to 'completed'
+        // Update the ride status to 'completed'
         $update_ride_stmt = $conn->prepare("UPDATE rides SET status = 'completed' WHERE ride_id = ?");
         $update_ride_stmt->bind_param("i", $ride_id);
         if (!$update_ride_stmt->execute()) {
@@ -72,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['end_ride'])) {
         }
         $update_ride_stmt->close();
 
-        // 3. Update the corresponding booking status to 'completed'
         $update_booking_stmt = $conn->prepare("UPDATE bookings SET status = 'completed' WHERE ride_id = ?");
         $update_booking_stmt->bind_param("i", $ride_id);
         if (!$update_booking_stmt->execute()) {
@@ -80,12 +76,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['end_ride'])) {
         }
         $update_booking_stmt->close();
 
-        // If all queries were successful, commit the changes
         $conn->commit();
         $_SESSION['success'] = "Ride ended successfully! The rider can now complete the payment.";
 
     } catch (Exception $e) {
-        // If anything failed, roll back all changes
         $conn->rollback();
         $_SESSION['error'] = "Error: " . $e->getMessage();
     }
@@ -189,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['end_ride'])) {
         <?php endif; ?>
         
         <div class="page-header">
-            <h1>My Posted Rides <span class="driver-badge">Driver</span></h1>
+            <h1>My Posted Rides</h1>
         </div>
         
         <div class="containers-wrapper">
@@ -198,9 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['end_ride'])) {
             <div class="ride-card">
 
                 <!-- Status badge (new, styled separately) -->
-                <span class="ride-status status-<?= $ride['status'] ?>">
-                    <?= ucfirst($ride['status']) ?>
-                </span>
+                
 
                 <!-- Rider image + name -->
                 <div class="ride-image">
@@ -208,6 +200,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['end_ride'])) {
                         <img src="../../Asset/icons/person.png" alt="<?= htmlspecialchars($ride['name']) ?>'s Image">
                     </div>
                     <h3 class="rider-name"><?= htmlspecialchars($ride['name']) ?></h3>
+                    <span class="ride-status status-<?= $ride['status'] ?>">
+                    <?= ucfirst($ride['status']) ?>
+                </span>
                 </div>
 
                 <!-- Ride details -->
@@ -233,12 +228,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['end_ride'])) {
                             <button class="ride-action" id="green" onclick="showEndRideModal(<?= $ride['id'] ?>)">End Ride</button>
                         
                         <?php elseif ($ride['status'] === 'completed'): ?>
-                            <button class="ride-action" onclick="viewBookings(<?= $ride['id'] ?>)">Bookings</button>
+                            <a href="tel:<?= htmlspecialchars($ride['phone']) ?>" class="ride-action">Call Rider</a>
                             <button class="ride-action" id="red" onclick="showDeleteModal(<?= $ride['id'] ?>)">Delete</button>
                         
                         <?php else: ?>
-                            <button class="ride-action" onclick="viewDetails(<?= $ride['id'] ?>)">Details</button>
-                            <button class="ride-action" id-="red" onclick="showDeleteModal(<?= $ride['id'] ?>)">Delete</button>
+                            <button class="ride-action" id="red" onclick="showDeleteModal(<?= $ride['id'] ?>)">Delete</button>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -249,7 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['end_ride'])) {
             <i class="fas fa-car"></i>
             <p>No rides posted yet</p>
             <p>You haven't posted any rides yet.</p>
-            <a href="home.php" class="ride-action" style="display: inline-block; width: auto; padding: 12px 20px;">
+            <a href="postride.php" class="ride-action" style="display: inline-block; width: auto; padding: 12px 20px;">
                 Create a Ride
             </a>
         </div>

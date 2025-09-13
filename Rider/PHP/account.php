@@ -141,17 +141,7 @@ if(isset($_POST['deleteAccount'])){
                 
                 <div class="profile-section">
                     <div class="profile-image-container">
-                        <?php
-                        $profilePic = "../../Asset/icons/person.png";
-                        if(!empty($userData['profile_pic'])) {
-                            $profilePic = "../../uploads/profile_pics/" . $userData['profile_pic'];
-                        }
-                        ?>
-                        <img src="<?php echo $profilePic; ?>" alt="Profile Picture" class="profile-image" id="profileImagePreview">
-                        <label for="profilePic" class="change-image-btn">
-                            <i class="fas fa-camera"></i>
-                        </label>
-                        <input type="file" id="profilePic" name="profilePic" accept="image/*" style="display: none;" onchange="previewImage(this)">
+                        <img src="../../Asset/icons/person.png" alt="Profile Picture" class="profile-image" id="profileImagePreview">
                     </div>
                     
                     <div class="profile-info">

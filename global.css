@@ -161,10 +161,6 @@ body {
 
 .ride-image {
   display: flex;
-  height: 80px;
-  width: 100%;
-  overflow: hidden;
-  position: relative;
 }
 .card-image{
   width: 60px;
@@ -226,12 +222,11 @@ body {
 .ride-btn {
   display: flex;
   justify-content: space-between;
-    gap: 10px;
+  gap: 10px;
 }
 
 .ride-action {
-  display: block;
-  width: 50%;
+  flex: 1;
   padding: 12px;
   background: var(--primary-color);
   color: var(--white);
@@ -243,6 +238,23 @@ body {
   text-align: center;
   text-decoration: none;
 }
+#green{
+  background-color: var(--success-color);
+  color: var(--white);
+}
+#green:hover{
+  background-color: var(--success-color-hover);
+  color: var(--white);
+}
+#red{
+  background-color: var(--error-color);
+  color: var(--white);
+}
+#red:hover{
+  background-color: var(--error-hover);
+  color: var(--white);
+}
+
 
 .ride-action:hover {
   background: var(--primary-hover);
@@ -250,25 +262,17 @@ body {
 
 
 .ride-status {
-    position: relative !important;
-    top: 0px;
-    left: 10px;
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 0.8em;
-    font-weight: 500;
-}
-
-.ride-status {
-  display: inline-block;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 15px;
   background: var(--primary-color);
   color: var(--white);
   font-size: 12px;
   font-weight: bold;
   padding: 5px 10px;
-  border-radius: 20px;
   margin: 10px;
 }
+
 
 /* Optional per-status colors */
 .status-booked {
@@ -363,22 +367,6 @@ body {
 }
 .modal-btn.modal-confirm:hover{
   background: var(--success-color-hover);
-  color: var(--white);
-}
-#green{
-  background-color: var(--success-color);
-  color: var(--white);
-}
-#green:hover{
-  background-color: var(--success-color-hover);
-  color: var(--white);
-}
-#red{
-  background-color: var(--error-color);
-  color: var(--white);
-}
-#red:hover{
-  background-color: var(--error-hover);
   color: var(--white);
 }
 

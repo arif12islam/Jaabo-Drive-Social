@@ -189,7 +189,6 @@ $check_active_ride_stmt->close();
 
                             <div class="ride-btn">
                                 <button class="ride-action" onclick="bookRide(<?= $ride['id'] ?>)">Book Now</button>
-                                <button class="ride-action">Call</button>
                             </div>
                         </div>
                     </div>

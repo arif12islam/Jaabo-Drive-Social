@@ -82,7 +82,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     <input type="checkbox" id="remember" name="remember">
                     <label for="remember">Remember me</label>
                 </div>
-                <a href="#" class="forgot-password">Forgot Password?</a>
             </div>
             <div class="input-error" id="loginError"><?php if(isset($error)) echo $error; ?></div>
             <button type="submit" class="login-btn" id="login-btn">Login</button>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jaabo – Drive Social</title>
+    <link rel="icon" type="image/png" href="./Asset/icons/favicon.png">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+
+    
+</head>
+<body>
+
+    <!-- Header -->
+    <header id="header" class="site-header">
+        <div class="container header-container">
+            <a href="#" class="logo">Jaabo</a>
+            <nav class="main-nav">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+            </nav>
+            <div class="header-actions">
+                 <a href="login.php" class="btn btn-primary">Login</a>
+            </div>
+            <button id="mobile-menu-button" class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu-content">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="login.php" class="btn btn-primary">Login</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container hero-container">
+                <div class="hero-text">
+                    <h1>Your Campus Commute, <span class="highlight">Reimagined.</span></h1>
+                    <p>The exclusive ride-sharing app for university students. Share rides, split costs, and connect with classmates. Safe, affordable, and social.</p>
+                    <div class="app-buttons">
+                        <a href="#" class="app-store-btn">
+                            <i class="fab fa-apple"></i>
+                            <div>
+                                <span>Download on the</span>
+                                <strong>App Store</strong>
+                            </div>
+                        </a>
+                        <a href="#" class="app-store-btn">
+                            <i class="fab fa-google-play"></i>
+                            <div>
+                                <span>GET IT ON</span>
+                                <strong>Google Play</strong>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <!-- Hero SVG Illustration -->
+                    <svg viewBox="0 0 500 350" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 450,320 C 300,350 150,300 10,320" fill="none" stroke="#e0e0e0" stroke-width="2"/>
+                        <path d="M 490,325 C 350,360 200,310 50,330" fill="none" stroke="#f0f0f0" stroke-width="3"/>
+                        <path d="M 120,290 C 100,290 80,270 80,250 L 80,200 C 80,180 100,170 120,170 L 280,170 C 310,170 330,190 330,220 L 330,250 C 330,270 310,290 280,290 Z" fill="#3498db"/>
+                        <path d="M 90,200 L 140,200 L 160,170 L 250,170 L 270,200 L 320,200" fill="#ffffff" opacity="0.8"/>
+                        <circle cx="130" cy="290" r="20" fill="#2c3e50"/><circle cx="280" cy="290" r="20" fill="#2c3e50"/>
+                        <circle cx="130" cy="290" r="10" fill="#ffffff"/><circle cx="280" cy="290" r="10" fill="#ffffff"/>
+                        <circle cx="240" cy="140" r="15" fill="#f1c40f"/><path d="M 225,155 C 225,175 255,175 255,155 Z" fill="#e74c3c"/>
+                        <circle cx="180" cy="145" r="15" fill="#f1c40f"/><path d="M 165,160 C 165,180 195,180 195,160 Z" fill="#2ecc71"/>
+                        <rect x="350" y="150" width="120" height="170" rx="5" fill="#ecf0f1"/>
+                        <rect x="360" y="200" width="20" height="100" fill="#bdc3c7"/><rect x="390" y="200" width="20" height="100" fill="#bdc3c7"/>
+                        <rect x="420" y="200" width="20" height="100" fill="#bdc3c7"/><path d="M 350 150 L 410 100 L 470 150 Z" fill="#bdc3c7"/>
+                    </svg>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Features Section -->
+        <section id="features" class="section-features">
+            <div class="container fade-in-section">
+                <div class="section-header">
+                    <h2>Why Students Choose Jaabo</h2>
+                    <p>Everything you need for a better commute.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="--icon-bg: rgba(52,152,219,0.1); --icon-color: var(--primary-color);">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Safety First</h3>
+                        <p>Only verified students from your university can join, ensuring a trusted and secure community for everyone.</p>
+                    </div>
+                    <div class="feature-card">
+                         <div class="feature-icon" style="--icon-bg: rgba(241,196,15,0.1); --icon-color: var(--secondary-color);">
+                            <i class="fas fa-piggy-bank"></i>
+                        </div>
+                        <h3>Affordable Travel</h3>
+                        <p>Split fuel costs with fellow students. Drivers save money, and riders get a cheap and convenient way to travel.</p>
+                    </div>
+                    <div class="feature-card">
+                         <div class="feature-icon" style="--icon-bg: rgba(46,204,113,0.1); --icon-color: #2ecc71;">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3>Eco-Friendly</h3>
+                        <p>Fewer cars on the road means a smaller carbon footprint. Do your part for the environment, one shared ride at a time.</p>
+                    </div>
+                    <div class="feature-card">
+                         <div class="feature-icon" style="--icon-bg: rgba(231,76,60,0.1); --icon-color: #e74c3c;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Build Community</h3>
+                        <p>Meet new people, make friends, and network with classmates from different departments on your way to campus.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="section-how-it-works">
+            <div class="container fade-in-section">
+                <div class="section-header">
+                    <h2>Get Started in 3 Easy Steps</h2>
+                    <p>Joining the Jaabo community is simple.</p>
+                </div>
+                <div class="steps-grid">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Sign Up & Login</h3>
+                        <p>Create your account using your university id. A quick verification keeps our community safe and exclusive.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Post or Find a Ride</h3>
+                        <p>Drivers can post their travel route and schedule. Riders can search for available rides that match their needs.</p>
+                    </div>
+                    <div class="step">
+                         <div class="step-number">3</div>
+                        <h3>Connect & Go!</h3>
+                        <p>Use the call feature to coordinate pickup details. Enjoy a smooth, affordable, and friendly ride to campus.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-cta">
+            <div class="container fade-in-section">
+                <h2>Ready to Revolutionize Your Commute?</h2>
+                <p>Join the Jaabo community at your university today. Download the app and start sharing rides!</p>
+                <div class="app-buttons">
+                    <a href="#" class="app-store-btn cta-app-btn">
+                        <i class="fab fa-apple"></i>
+                        <div>
+                            <span>Download on the</span>
+                            <strong>App Store</strong>
+                        </div>
+                    </a>
+                    <a href="#" class="app-store-btn cta-app-btn">
+                        <i class="fab fa-google-play"></i>
+                        <div>
+                            <span>GET IT ON</span>
+                            <strong>Google Play</strong>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <p class="logo">Jaabo</p>
+            <div class="footer-social-links">
+                 <a href="#"><i class="fab fa-facebook"></i></a>
+                 <a href="#"><i class="fab fa-twitter"></i></a>
+                 <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p class="copyright">&copy; 2025 Jaabo. All Rights Reserved. Made for students, by students.</p>
+        </div>
+    </footer>
+    
+    <script>
+        
+        // Header shadow on scroll
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll Fade-in Animation
+        const sections = document.querySelectorAll('.fade-in-section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
+

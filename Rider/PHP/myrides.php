@@ -156,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_booking'])) {
         <?php endif; ?>
         
         <div class="page-header">
-            <h1>My Booked Rides <span class="rider-badge">Rider</span></h1>
+            <h1>My Ride History</h1>
         </div>
         
         <!-- Ride Cards -->
@@ -164,14 +164,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_booking'])) {
             <?php if (count($bookedRides) > 0): ?>
                 <?php foreach ($bookedRides as $ride): ?>
                     <div class="ride-card">
-                        <span class="ride-status status-<?= $ride['status'] ?>">
-                            <?= ucfirst($ride['status']) ?>
-                        </span>
+                        
                         <div class="ride-image">
                             <div class="card-image">
                                 <img src="../../Asset/icons/person.png" alt="Driver Image">
                             </div>
                             <h3 class="rider-name"><?= htmlspecialchars($ride['name']) ?></h3>
+                            <span class="ride-status status-<?= $ride['status'] ?>">
+                            <?= ucfirst($ride['status']) ?>
+                        </span>
                         </div>
                         <div class="ride-details">
                             <h3 class="ride-title"><?= htmlspecialchars($ride['title']) ?></h3>
@@ -190,14 +191,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_booking'])) {
                                     <button class="ride-action" id="red" onclick="showCancelModal(<?= $ride['id'] ?>)">Cancel Ride</button>
                                 
                                 <?php elseif ($ride['status'] === 'completed'): ?>
-                                    <button class="ride-action" onclick="viewBookings(<?= $ride['id'] ?>)">Bookings</button>
+                                    <a href="tel:<?= htmlspecialchars($ride['phone']) ?>" class="ride-action">Call Rider</a>
                                     <a href="payment.php?booking_id=<?= $ride['id'] ?>" class="ride-action" id="green">Pay</a>
 
                                 <?php elseif ($ride['status'] === 'cancelled'): ?>
-                                    <button class="ride-action" onclick="viewDetails(<?= $ride['id'] ?>)">Details</button>
                                     <button class="ride-action" id="red" onclick="showDeleteModal(<?= $ride['id'] ?>)">Delete</button>
                                 <?php else: ?>
-                                    <button class="ride-action" onclick="viewDetails(<?= $ride['id'] ?>)">Details</button>
                                     <button class="ride-action" id="red" onclick="showDeleteModal(<?= $ride['id'] ?>)">Delete</button>
                                 <?php endif; ?>
                             </div>
@@ -216,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_booking'])) {
             <?php endif; ?>
         </div>
         
-        <!-- Cancel Modal -->
+        <!-- Modals -->
         <div class="modal" id="cancelModal">
             <div class="modal-content">
                 <h3>Cancel Booking</h3>
@@ -234,20 +233,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_booking'])) {
         </div>
 
         <div class="modal" id="payModal">
-    <div class="modal-content">
-        <h3>Payment Confirmation</h3>
-        <p>Are you sure you want to proceed with the payment?</p>
-        <form method="POST" id="paymentForm">
-            <input type="hidden" name="confirm_payment" value="1">
-            <input type="hidden" name="booking_id" id="booking_id">
-            <input type="hidden" name="ride_id" id="ride_id">
-            <div class="modal-buttons">
-                <button type="button" class="modal-btn modal-cancel" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="modal-btn modal-confirm">Yes, Pay Now</button>
+            <div class="modal-content">
+                <h3>Payment Confirmation</h3>
+                <p>Are you sure you want to proceed with the payment?</p>
+                <form method="POST" id="paymentForm">
+                    <input type="hidden" name="confirm_payment" value="1">
+                    <input type="hidden" name="booking_id" id="booking_id">
+                    <input type="hidden" name="ride_id" id="ride_id">
+                    <div class="modal-buttons">
+                        <button type="button" class="modal-btn modal-cancel" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="modal-btn modal-confirm">Yes, Pay Now</button>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
         <div class="modal" id="deleteModal">
             <div class="modal-content">
                 <h3>Delete Booking</h3>
