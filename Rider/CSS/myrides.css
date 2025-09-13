@@ -96,25 +96,7 @@ main {
     font-weight: 500;
 }
 
-.status-confirmed {
-    background-color: rgba(52, 152, 219, 0.9);
-    color: white;
-}
 
-.status-completed {
-    background-color: rgba(39, 174, 96, 0.9);
-    color: white;
-}
-
-.status-upcoming {
-    background-color: rgba(243, 156, 18, 0.9);
-    color: white;
-}
-
-.status-cancelled {
-    background-color: rgba(231, 76, 60, 0.9);
-    color: white;
-}
 
 /* Action buttons specific to booked rides */
 .btn-call {
@@ -166,60 +148,5 @@ main {
 .no-rides p {
     font-size: 1.1em;
     margin-bottom: 20px;
-}
-
-/* Cancel confirmation modal */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--overlay);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background-color: var(--white);
-    padding: 30px;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-}
-
-.modal-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.modal-btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-.modal-confirm {
-    background-color: var(--error-color);
-    color: white;
-}
-
-.modal-confirm:hover {
-    background-color: #c0392b;
-}
-
-.modal-cancel {
-    background-color: var(--muted-text);
-    color: white;
-}
-
-.modal-cancel:hover {
-    background-color: #636e72;
 }
 

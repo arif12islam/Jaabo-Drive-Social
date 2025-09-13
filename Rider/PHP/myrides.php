@@ -41,29 +41,39 @@
     }
     
     // Handle ride cancellation
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_booking'])) {
-        $booking_id = intval($_POST['booking_id']);
-        $ride_id = intval($_POST['ride_id']);
-        
-        $conn->begin_transaction();
-        try {
-            // Cancel booking
-            $cancel_stmt = $conn->prepare("UPDATE bookings SET status = 'active' WHERE booking_id = ? AND user_id = ?");
-            $cancel_stmt->bind_param("ii", $booking_id, $userID);
-            if (!$cancel_stmt->execute()) {
-                throw new Exception("Failed to cancel booking.");
-            }
-            
-            $conn->commit();
-            $_SESSION['success'] = "Booking cancelled successfully! The ride is now available for others.";
-        } catch (Exception $e) {
-            $conn->rollback();
-            $_SESSION['error'] = $e->getMessage();
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_booking'])) {
+    $booking_id = intval($_POST['booking_id']);
+    $ride_id = intval($_POST['ride_id']);
+    
+    $conn->begin_transaction();
+    try {
+        $cancel_booking_stmt = $conn->prepare("UPDATE bookings SET status = 'cancelled' WHERE booking_id = ? AND user_id = ?");
+        $cancel_booking_stmt->bind_param("is", $booking_id, $userID);
+        if (!$cancel_booking_stmt->execute()) {
+            throw new Exception("Failed to cancel booking.");
         }
+        $cancel_booking_stmt->close();
+
+        $update_ride_stmt = $conn->prepare("UPDATE rides SET seats_available = seats_available + 1 WHERE ride_id = ?");
+        $update_ride_stmt->bind_param("i", $ride_id);
+        if (!$update_ride_stmt->execute()) {
+            throw new Exception("Failed to update ride availability.");
+        }
+        $update_ride_stmt->close();
         
-        header("Location: myrides.php");
-        exit();
+        $conn->commit();
+        $_SESSION['success'] = "Booking cancelled successfully! The ride is now available for others.";
+
+    } catch (Exception $e) {
+        // If anything fails, undo all changes
+        $conn->rollback();
+        $_SESSION['error'] = "Error: " . $e->getMessage();
     }
+    
+    header("Location: myrides.php");
+    exit();
+}
+?>
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -145,16 +155,25 @@
                             </div>
                             <div class="ride-date-time">
                                 <span><?= htmlspecialchars($ride['date']) ?></span>
-                                <span>Booked</span>
                             </div>
                             <div class="ride-price"><?= htmlspecialchars($ride['price']) ?></div>
+                            <!-- Buttons -->
                             <div class="ride-btn">
-                                <button class="ride-action btn-call" onclick="callDriver('<?= htmlspecialchars($ride['name']) ?>', '<?= htmlspecialchars($ride['phone']) ?>')">
-                                    <i class="fas fa-phone"></i> Call Driver
-                                </button>
-                                <button class="ride-action btn-cancel" onclick="showCancelModal(<?= $ride['id'] ?>, <?= $ride['ride_id'] ?>)">
-                                    <i class="fas fa-times"></i> Cancel
-                                </button>
+                                <?php if ($ride['status'] === 'booked'): ?>
+                                    <a href="tel:<?= htmlspecialchars($ride['phone']) ?>" class="ride-action">Call Rider</a>
+                                    <button class="ride-action" id="red" onclick="showCancelModal(<?= $ride['id'] ?>)">Cancel Ride</button>
+                                
+                                <?php elseif ($ride['status'] === 'completed'): ?>
+                                    <button class="ride-action" onclick="viewBookings(<?= $ride['id'] ?>)">Bookings</button>
+                                    <button class="ride-action" id="green" onclick="showPaymentModal(<?= $ride['id'] ?>)">Pay</button>
+
+                                <?php elseif ($ride['status'] === 'cancelled'): ?>
+                                    <button class="ride-action" onclick="viewDetails(<?= $ride['id'] ?>)">Details</button>
+                                    <button class="ride-action" id="red" onclick="showDeleteModal(<?= $ride['id'] ?>)">Delete</button>
+                                <?php else: ?>
+                                    <button class="ride-action" onclick="viewDetails(<?= $ride['id'] ?>)">Details</button>
+                                    <button class="ride-action" id="red" onclick="showDeleteModal(<?= $ride['id'] ?>)">Delete</button>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -182,11 +201,42 @@
                     <input type="hidden" name="ride_id" id="ride_id">
                     <div class="modal-buttons">
                         <button type="button" class="modal-btn modal-cancel" onclick="closeModal()">No, Keep It</button>
-                        <button type="submit" class="modal-btn modal-confirm">Yes, Cancel</button>
+                        <button type="submit" class="modal-btn modal-delete">Yes, Cancel</button>
                     </div>
                 </form>
             </div>
         </div>
+
+        <div class="modal" id="payModal">
+            <div class="modal-content">
+                <h3>Payment Confirmation</h3>
+                <p>Are you sure you want to proceed with the payment?</p>
+                <form method="POST" id="paymentForm">
+                    <input type="hidden" name="confirm_payment" value="1">
+                    <input type="hidden" name="booking_id" id="booking_id">
+                    <input type="hidden" name="ride_id" id="ride_id">
+                    <div class="modal-buttons">
+                        <button type="button" class="modal-btn modal-cancel" onclick="closeModal()">No, Go Back</button>
+                        <button type="submit" class="modal-btn modal-confirm">Yes, Pay Now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal" id="deleteModal">
+            <div class="modal-content">
+                <h3>Delete Ride</h3>
+                <p>Are you sure you want to delete this ride? This action cannot be undone.</p>
+                <form method="POST" id="deleteForm">
+                    <input type="hidden" name="delete_ride" value="1">
+                    <input type="hidden" name="ride_id" id="ride_id">
+                    <div class="modal-buttons">
+                        <button type="button" class="modal-btn modal-cancel" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="modal-btn modal-delete">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </main> 
 </body>
 </html>

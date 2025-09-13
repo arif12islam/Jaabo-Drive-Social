@@ -15,9 +15,20 @@ function showCancelModal(bookingId, rideId) {
     document.getElementById('ride_id').value = rideId;
     document.getElementById('cancelModal').style.display = 'flex';
 }
+function showPaymentModal(bookingId, rideId) {
+    document.getElementById('booking_id').value = bookingId;
+    document.getElementById('ride_id').value = rideId;
+    document.getElementById('payModal').style.display = 'flex';
+}
+function showDeleteModal(rideId) {
+    document.getElementById('ride_id').value = rideId;
+    document.getElementById('deleteModal').style.display = 'flex';
+}
 
 function closeModal() {
     document.getElementById('cancelModal').style.display = 'none';
+    document.getElementById('payModal').style.display = 'none';
+    document.getElementById('deleteModal').style.display = 'none';
 }
 
 // Close modal if clicked outside

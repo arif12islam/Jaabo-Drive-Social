@@ -7,6 +7,7 @@
   --light-bg: #f5f7fa;
   --muted-text: #7f8c8d;
   --success-color: #27ae60;
+  --success-color-hover: #49a16e;
   --white: #ffffff;
   --overlay: rgba(0, 0, 0, 0.5);
   --shadow: rgba(0, 0, 0, 0.1);
@@ -204,9 +205,19 @@ body {
   font-size: 14px;
   color: var(--muted-text);
 }
+.ride-price-seats {
+  display: flex;
+  justify-content: space-between;
+}
 
 .ride-price {
   font-size: 20px;
+  font-weight: bold;
+  color: var(--success-color);
+  margin-bottom: 15px;
+}
+.ride-seats {
+  font-size: 16px;
   font-weight: bold;
   color: var(--success-color);
   margin-bottom: 15px;
@@ -237,6 +248,17 @@ body {
   background: var(--primary-hover);
 }
 
+
+.ride-status {
+    position: relative !important;
+    top: 0px;
+    left: 10px;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: 500;
+}
+
 .ride-status {
   display: inline-block;
   background: var(--primary-color);
@@ -257,4 +279,94 @@ body {
 }
 .status-active {
   background: green;
+}
+.status-cancelled {
+  background: var(--error-color);
+}
+.status-paid {
+  background: var(--success-color);
+}
+
+
+/*modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.modal-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.modal-confirm {
+    background-color: var(--error-color);
+    color: white;
+}
+
+.modal-delete:hover {
+    background-color: var(--error-hover);
+}
+.modal-delete {
+    background-color: var(--error-color);
+    color: white;
+}
+
+.modal-cancel {
+    background-color: var(--muted-text);
+    color: white;
+}
+
+.modal-cancel:hover {
+    background-color: #636e72;
+}
+.modal-btn.modal-confirm{
+  background: var(--success-color);
+  color: var(--white);
+}
+.modal-btn.modal-confirm:hover{
+  background: var(--success-color-hover);
+  color: var(--white);
+}
+#green{
+  background-color: var(--success-color);
+  color: var(--white);
+}
+#green:hover{
+  background-color: var(--success-color-hover);
+  color: var(--white);
+}
+#red{
+  background-color: var(--error-color);
+  color: var(--white);
+}
+#red:hover{
+  background-color: var(--error-hover);
+  color: var(--white);
 }
