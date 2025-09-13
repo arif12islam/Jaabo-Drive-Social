@@ -1,0 +1,149 @@
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #121212;
+  }
+
+  main {
+    --light-bg: #121212;
+    --bg-light: #121212;
+    --white: #1e1e1e;
+    --text-color: #e0e0e0;
+    --text-dark: #e0e0e0;
+    --muted-text: #888888;
+    --text-light: #888888;
+    --secondary-color: #c0c0c0;
+    --border-color: #444444;
+    --shadow: rgba(0, 0, 0, 0.4);
+  }
+
+  .login-form-container,
+  .signup-form-container,
+  .account-container,
+  .payment-container,
+  .main-content {
+    background: var(--white);
+    background-color: #1e1e1e;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  }
+  .login-form-container h2,
+  .signup-form-container h2 {
+    color: white;
+  }
+  .login-form-container label,
+  .signup-form-container label {
+    color: white;
+  }
+  .login-form-container i,
+  .signup-form-container i {
+    color: var(--muted-text);
+  }
+
+  .input-with-icon input,
+  .input-with-icon select,
+  .form-group input,
+  .form-group textarea,
+  #search-input {
+    background-color: #2a2a2a;
+    color: var(--text-color);
+    border-color: var(--border-color);
+  }
+
+  .input-with-icon input:focus,
+  .input-with-icon select:focus,
+  .form-group input:focus,
+  .form-group textarea:focus,
+  #search-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+  }
+  
+  .input-with-icon input:disabled,
+  .non-editable {
+    background-color: #333;
+    cursor: not-allowed;
+  }
+  
+  .btn-outline {
+    color: var(--text-color);
+    border-color: var(--border-color);
+  }
+
+  .btn-outline:hover {
+    background: #333;
+  }
+
+  .btn.btn-danger:hover {
+    background: #e74c3c;
+  }
+
+  .success-message,
+  .alert-success,
+  .success {
+    background-color: #1a3c23;
+    color: #a6e3b8;
+    border-color: #2e6b3e;
+    border-left-color: #28a745;
+  }
+
+  .alert-error,
+  .error,
+  .error-message {
+    background-color: #4a1c1f;
+    color: #f5c6cb;
+    border-color: #8b3d44;
+    border-left-color: #d9534f;
+  }
+
+  .info-box,
+  .info-group {
+    background-color: #2c3e50;
+  }
+  
+  .info-box h2,
+  .info-box p {
+    color: var(--text-color);
+  }
+
+  .profile-section {
+    border-bottom-color: var(--border-color);
+  }
+
+  .status-filter {
+    background: var(--white);
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+  
+  .no-rides i {
+    color: var(--border-color);
+  }
+
+  .payment-container .page-title,
+  .payment-container .ride-summary,
+  .payment-method-btn {
+    color: var(--text-color);
+  }
+  
+  .payment-method-selector {
+    border-color: var(--border-color);
+  }
+
+  .payment-method-btn {
+    background: transparent;
+  }
+
+  .payment-method-btn.active {
+    background: rgba(52, 152, 219, 0.1);
+  }
+
+  .mfs-options label {
+    border-color: #333;
+  }
+
+  .mfs-options label:hover {
+    border-color: #555;
+  }
+
+  .mfs-options input[type="radio"]:checked + label {
+    border-color: var(--primary-color);
+  }
+}

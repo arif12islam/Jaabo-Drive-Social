@@ -39,6 +39,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="global.css">
     <link rel="stylesheet" href="signup.css">
+    <link rel="stylesheet" href="darkmode.css">
     <script src="signup.js" defer></script>
 
 </head>

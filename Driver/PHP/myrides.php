@@ -136,6 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['end_ride'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../global.css">
     <link rel="stylesheet" href="../CSS/myrides.css">
+    <link rel="stylesheet" href="../../darkmode.css">
     <script src="../JS/myrides.js" defer></script>
     <title>My Posted Rides - Driver</title>
     <link rel="icon" type="image/png" href="../../Asset/icons/favicon.png">
