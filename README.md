@@ -29,7 +29,7 @@ To run Jaabo locally, you'll need the following installed:
 
 1.  Clone the repository:
     ```sh
-    git clone [https://github.com/your-username/jaabo.git](https://github.com/your-username/jaabo.git)
+    git clone [https://github.com/your-username/jaabo.git]https://github.com/arif12islam/Jaabo-Drive-Social
     cd jaabo
     ```
 2.  Install dependencies using Composer:
